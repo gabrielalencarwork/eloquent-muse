@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
 
 const WHATSAPP_URL =
   "https://wa.me/?text=Ol%C3%A1%2C%20Bárbara.%20Gostaria%20de%20agendar%20uma%20sess%C3%A3o.";
-const SUBSTACK_URL = "https://substack.com/";
+const SUBSTACK_URL = "https://substack.com/@tendacigana?r=69r2p6&utm_medium=ios&utm_source=stories&shareImageVariant=image";
 const LINKTREE_URL =
   "https://linktr.ee/barbaraluiza.psi";
 
