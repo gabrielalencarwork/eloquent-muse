@@ -370,6 +370,8 @@ function Comentarios() {
   const [comments, setComments] = useState<{ name: string; text: string; date: string }[]>([]);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const submitFn = useServerFn(submitCadernoMessage);
 
   useEffect(() => {
     try {
@@ -378,17 +380,26 @@ function Comentarios() {
     } catch {}
   }, []);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !text.trim()) return;
-    const next = [
-      { name: name.trim(), text: text.trim(), date: new Date().toLocaleDateString("pt-BR") },
-      ...comments,
-    ].slice(0, 30);
-    setComments(next);
-    try { localStorage.setItem("bl-comments", JSON.stringify(next)); } catch {}
-    setName("");
-    setText("");
+    if (!name.trim() || !text.trim() || status === "sending") return;
+    setStatus("sending");
+    try {
+      await submitFn({ data: { nome: name.trim(), texto: text.trim() } });
+      const next = [
+        { name: name.trim(), text: text.trim(), date: new Date().toLocaleDateString("pt-BR") },
+        ...comments,
+      ].slice(0, 30);
+      setComments(next);
+      try { localStorage.setItem("bl-comments", JSON.stringify(next)); } catch {}
+      setName("");
+      setText("");
+      setStatus("sent");
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
   };
 
   return (
