@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import heroStill from "@/assets/hero-still.jpg";
 import windowLight from "@/assets/window-light.jpg";
+import { submitCadernoMessage } from "@/lib/caderno.functions";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -370,6 +372,8 @@ function Comentarios() {
   const [comments, setComments] = useState<{ name: string; text: string; date: string }[]>([]);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const submitFn = useServerFn(submitCadernoMessage);
 
   useEffect(() => {
     try {
@@ -378,17 +382,26 @@ function Comentarios() {
     } catch {}
   }, []);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !text.trim()) return;
-    const next = [
-      { name: name.trim(), text: text.trim(), date: new Date().toLocaleDateString("pt-BR") },
-      ...comments,
-    ].slice(0, 30);
-    setComments(next);
-    try { localStorage.setItem("bl-comments", JSON.stringify(next)); } catch {}
-    setName("");
-    setText("");
+    if (!name.trim() || !text.trim() || status === "sending") return;
+    setStatus("sending");
+    try {
+      await submitFn({ data: { nome: name.trim(), texto: text.trim() } });
+      const next = [
+        { name: name.trim(), text: text.trim(), date: new Date().toLocaleDateString("pt-BR") },
+        ...comments,
+      ].slice(0, 30);
+      setComments(next);
+      try { localStorage.setItem("bl-comments", JSON.stringify(next)); } catch {}
+      setName("");
+      setText("");
+      setStatus("sent");
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
   };
 
   return (
@@ -425,11 +438,17 @@ function Comentarios() {
           />
           <button
             type="submit"
-            className="col-span-12 md:col-span-2 font-mono text-[11px] uppercase tracking-[0.22em] border border-ink text-ink py-3 hover:bg-ink hover:text-cream transition-colors"
+            disabled={status === "sending"}
+            className="col-span-12 md:col-span-2 font-mono text-[11px] uppercase tracking-[0.22em] border border-ink text-ink py-3 hover:bg-ink hover:text-cream transition-colors disabled:opacity-50"
           >
-            Enviar
+            {status === "sending" ? "Enviando…" : status === "sent" ? "Enviada ✓" : "Enviar"}
           </button>
         </form>
+        {status === "error" && (
+          <p className="-mt-8 mb-8 font-mono text-[11px] uppercase tracking-[0.22em] text-terracotta">
+            Não foi possível enviar. Tente novamente em instantes.
+          </p>
+        )}
 
         <div className="space-y-6">
           {comments.length === 0 && (
