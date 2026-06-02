@@ -438,11 +438,17 @@ function Comentarios() {
           />
           <button
             type="submit"
-            className="col-span-12 md:col-span-2 font-mono text-[11px] uppercase tracking-[0.22em] border border-ink text-ink py-3 hover:bg-ink hover:text-cream transition-colors"
+            disabled={status === "sending"}
+            className="col-span-12 md:col-span-2 font-mono text-[11px] uppercase tracking-[0.22em] border border-ink text-ink py-3 hover:bg-ink hover:text-cream transition-colors disabled:opacity-50"
           >
-            Enviar
+            {status === "sending" ? "Enviando…" : status === "sent" ? "Enviada ✓" : "Enviar"}
           </button>
         </form>
+        {status === "error" && (
+          <p className="-mt-8 mb-8 font-mono text-[11px] uppercase tracking-[0.22em] text-terracotta">
+            Não foi possível enviar. Tente novamente em instantes.
+          </p>
+        )}
 
         <div className="space-y-6">
           {comments.length === 0 && (
