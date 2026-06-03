@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import heroStill from "@/assets/hero-still.jpg";
-import windowLight from "@/assets/window-light.jpg";
+import barbaraPortrait from "@/assets/barbara-portrait.png.asset.json";
 import { submitCadernoMessage } from "@/lib/caderno.functions";
 
 export const Route = createFileRoute("/")({
@@ -267,8 +267,8 @@ function Sobre() {
         <div className="col-span-12 md:col-span-5 order-2 md:order-1">
           <div className="relative aspect-[4/5] overflow-hidden grain">
             <img
-              src={windowLight}
-              alt="Silhueta em frente a uma janela com cortina de linho, luz suave entrando"
+              src={barbaraPortrait.url}
+              alt="Bárbara Luiza encostada em um banco de madeira, em frente a uma estante repleta de CDs e DVDs"
               width={1280}
               height={1600}
               loading="lazy"
