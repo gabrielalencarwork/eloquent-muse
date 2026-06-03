@@ -267,8 +267,8 @@ function Sobre() {
         <div className="col-span-12 md:col-span-5 order-2 md:order-1">
           <div className="relative aspect-[4/5] overflow-hidden grain">
             <img
-              src={windowLight}
-              alt="Silhueta em frente a uma janela com cortina de linho, luz suave entrando"
+              src={barbaraPortrait.url}
+              alt="Bárbara Luiza encostada em um banco de madeira, em frente a uma estante repleta de CDs e DVDs"
               width={1280}
               height={1600}
               loading="lazy"
