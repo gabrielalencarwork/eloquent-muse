@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import heroStill from "@/assets/hero-still.jpg";
-import windowLight from "@/assets/window-light.jpg";
+import barbaraPortrait from "@/assets/barbara-portrait.png.asset.json";
 import { submitCadernoMessage } from "@/lib/caderno.functions";
 
 export const Route = createFileRoute("/")({
