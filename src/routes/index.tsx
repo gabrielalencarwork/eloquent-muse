@@ -380,7 +380,7 @@ function Livro() {
         <div className="col-span-12 md:col-span-5">
           <div className="relative aspect-[3/4] overflow-hidden border border-border shadow-[0_30px_60px_-30px_rgba(0,0,0,0.45)]">
             <img
-              src={caravanaCapa.url}
+              src={caravanaCapa}
               alt="Capa do livro de poemas Caravana, de Bárbara Luiza: fundo noturno com lua em traço fino"
               width={1080}
               height={1440}
