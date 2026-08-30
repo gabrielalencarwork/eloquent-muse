@@ -417,7 +417,7 @@ function Livro() {
               <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                 Valor
               </p>
-              <p className="mt-1 font-display text-2xl">Sob consulta</p>
+              <p className="mt-1 font-display text-2xl">R$33,00</p>
             </div>
             <a
               href={WHATSAPP_LIVRO_URL}
@@ -425,7 +425,7 @@ function Livro() {
               rel="noreferrer"
               className="group inline-flex items-center gap-3 bg-ink text-cream px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors"
             >
-              Comprar pelo WhatsApp
+              Quero meu livro
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </a>
           </div>
