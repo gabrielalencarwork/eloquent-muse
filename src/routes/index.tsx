@@ -34,6 +34,7 @@ function Nav() {
         <nav className="hidden md:flex items-center gap-9 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
           <a href="#escuta" className="hover:text-ink transition-colors">Escuta</a>
           <a href="#metodo" className="hover:text-ink transition-colors">Método</a>
+          <a href="#livro" className="hover:text-ink transition-colors">Livro</a>
           <a href="#sobre" className="hover:text-ink transition-colors">Sobre</a>
           <a href="#contato" className="hover:text-ink transition-colors">Contato</a>
         </nav>
