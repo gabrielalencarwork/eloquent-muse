@@ -373,6 +373,69 @@ function ParaQuem() {
   );
 }
 
+function Livro() {
+  return (
+    <section id="livro" className="py-24 md:py-36 bg-paper border-y border-border grain">
+      <div className="mx-auto max-w-[1200px] px-6 md:px-10 grid grid-cols-12 gap-10 md:gap-14 items-center">
+        <div className="col-span-12 md:col-span-5">
+          <div className="relative aspect-[3/4] overflow-hidden border border-border shadow-[0_30px_60px_-30px_rgba(0,0,0,0.45)]">
+            <img
+              src={caravanaCapa.url}
+              alt="Capa do livro de poemas Caravana, de Bárbara Luiza: fundo noturno com lua em traço fino"
+              width={1080}
+              height={1440}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        <div className="col-span-12 md:col-span-6 md:col-start-7">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+            v. o livro
+          </p>
+          <h2 className="mt-4 font-display font-light text-4xl md:text-6xl leading-[1.02] tracking-tight">
+            Caravana
+          </h2>
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+            poemas · bárbara luiza · 79 páginas
+          </p>
+
+          <blockquote className="mt-8 border-l-2 border-terracotta pl-5 font-display italic text-xl md:text-2xl leading-snug text-ink/90">
+            "é preciso percorrer uma saga entre as dúvidas do desconhecer até se
+            reconhecer no estar do seu ser sendo."
+          </blockquote>
+
+          <p className="mt-8 font-body text-lg leading-relaxed text-ink/85">
+            Um livro de poemas escrito na travessia: eros, erosão, luto, desejo e
+            a lenta invenção de si. Palavras que nasceram do mesmo lugar de onde
+            nasce a escuta.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-baseline gap-6 border-t border-border pt-8">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                Valor
+              </p>
+              <p className="mt-1 font-display text-2xl">Sob consulta</p>
+            </div>
+            <a
+              href={WHATSAPP_LIVRO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-3 bg-ink text-cream px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors"
+            >
+              Comprar pelo WhatsApp
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 function Comentarios() {
   const [comments, setComments] = useState<{ name: string; text: string; date: string }[]>([]);
   const [name, setName] = useState("");
