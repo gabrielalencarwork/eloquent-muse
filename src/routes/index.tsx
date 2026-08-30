@@ -477,7 +477,7 @@ function Comentarios() {
       <div className="mx-auto max-w-[1100px] px-6 md:px-10">
         <div className="mb-12">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
-            v. caderno aberto
+            vi. caderno aberto
           </p>
           <h2 className="mt-4 font-display font-light text-4xl md:text-5xl leading-[1.05] tracking-tight max-w-2xl">
             Deixe uma <span className="display-italic text-terracotta">palavra</span>.
@@ -544,7 +544,7 @@ function Contato() {
       <div className="absolute inset-0 grain pointer-events-none" />
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 relative">
         <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-cream/50">
-          vi. contato
+          vii. contato
         </p>
         <h2 className="mt-6 font-display font-light text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-[-0.03em] max-w-5xl">
           Quando estiver pronta,
@@ -635,6 +635,7 @@ function Index() {
       <Metodo />
       <Sobre />
       <ParaQuem />
+      <Livro />
       <Comentarios />
       <Contato />
       <Footer />
