@@ -374,6 +374,31 @@ function ParaQuem() {
 }
 
 function Livro() {
+  const [open, setOpen] = useState(false);
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
+  const [erro, setErro] = useState("");
+  const checkout = useServerFn(createBookCheckout);
+
+  const comprar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nome.trim() || !email.trim()) return;
+    setStatus("sending");
+    setErro("");
+    try {
+      const res = await checkout({
+        data: { nome: nome.trim(), email: email.trim(), origin: window.location.origin },
+      });
+      window.location.href = res.checkoutUrl;
+    } catch (err) {
+      setStatus("error");
+      setErro(
+        err instanceof Error ? err.message : "Não foi possível abrir o pagamento.",
+      );
+    }
+  };
+
   return (
     <section id="livro" className="py-24 md:py-36 bg-paper border-y border-border grain">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 grid grid-cols-12 gap-10 md:gap-14 items-center">
@@ -398,7 +423,7 @@ function Livro() {
             Caravana
           </h2>
           <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-            poemas · bárbara luiza · 79 páginas
+            poemas · bárbara luiza · 79 páginas · pdf
           </p>
 
           <blockquote className="mt-8 border-l-2 border-terracotta pl-5 font-display italic text-xl md:text-2xl leading-snug text-ink/90">
@@ -419,21 +444,66 @@ function Livro() {
               </p>
               <p className="mt-1 font-display text-2xl">R$33,00</p>
             </div>
-            <a
-              href={WHATSAPP_LIVRO_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="group inline-flex items-center gap-3 bg-ink text-cream px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors"
-            >
-              Quero meu livro
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </a>
+            {!open && (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="group inline-flex items-center gap-3 bg-ink text-cream px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors"
+              >
+                Quero meu livro
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </button>
+            )}
           </div>
+
+          {open && (
+            <form onSubmit={comprar} className="mt-8 space-y-4">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  required
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  placeholder="Seu nome"
+                  className="w-full bg-transparent border-b border-border focus:border-ink outline-none py-3 font-body text-base placeholder:text-muted-foreground/70"
+                />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Seu e-mail"
+                  className="w-full bg-transparent border-b border-border focus:border-ink outline-none py-3 font-body text-base placeholder:text-muted-foreground/70"
+                />
+              </div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                pix · cartão · boleto · entrega imediata do pdf
+              </p>
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="group inline-flex items-center gap-3 bg-ink text-cream px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors disabled:opacity-60"
+              >
+                {status === "sending" ? "Abrindo pagamento…" : "Ir para o pagamento"}
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </button>
+              {erro && (
+                <p className="font-body text-sm text-terracotta">{erro}</p>
+              )}
+              <p className="font-body text-sm text-muted-foreground">
+                Prefere falar direto com a Bárbara?{" "}
+                <a href={WHATSAPP_LIVRO_URL} target="_blank" rel="noreferrer" className="underline hover:text-ink">
+                  WhatsApp
+                </a>
+              </p>
+            </form>
+          )}
         </div>
       </div>
     </section>
   );
 }
+
 
 
 function Comentarios() {
