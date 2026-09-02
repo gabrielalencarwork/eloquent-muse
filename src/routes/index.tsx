@@ -5,6 +5,7 @@ import heroStill from "@/assets/hero-still.jpg";
 import barbaraPortrait from "@/assets/barbara-portrait.PNG";
 import caravanaCapa from "@/assets/caravana-capa.jpg";
 import { submitCadernoMessage } from "@/lib/caderno.functions";
+import { createBookCheckout } from "@/lib/livro.functions";
 
 export const Route = createFileRoute("/")({
   component: Index,
