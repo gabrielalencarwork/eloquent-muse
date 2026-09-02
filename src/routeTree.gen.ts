@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LivroObrigadoRouteImport } from './routes/livro.obrigado'
+import { Route as ApiPublicLivroCheckoutRouteImport } from './routes/api/public/livro-checkout'
 import { Route as ApiPublicLivroDownloadRouteImport } from './routes/api/public/livro-download'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const LivroObrigadoRoute = LivroObrigadoRouteImport.update({
   id: '/livro/obrigado',
   path: '/livro/obrigado',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicLivroCheckoutRoute = ApiPublicLivroCheckoutRouteImport.update({
+  id: '/api/public/livro-checkout',
+  path: '/api/public/livro-checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicLivroDownloadRoute = ApiPublicLivroDownloadRouteImport.update({
@@ -39,12 +45,14 @@ const ApiPublicMercadopagoWebhookRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/livro/obrigado': typeof LivroObrigadoRoute
+  '/api/public/livro-checkout': typeof ApiPublicLivroCheckoutRoute
   '/api/public/livro-download': typeof ApiPublicLivroDownloadRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/livro/obrigado': typeof LivroObrigadoRoute
+  '/api/public/livro-checkout': typeof ApiPublicLivroCheckoutRoute
   '/api/public/livro-download': typeof ApiPublicLivroDownloadRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
@@ -52,6 +60,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/livro/obrigado': typeof LivroObrigadoRoute
+  '/api/public/livro-checkout': typeof ApiPublicLivroCheckoutRoute
   '/api/public/livro-download': typeof ApiPublicLivroDownloadRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
@@ -60,18 +69,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/livro/obrigado'
+    | '/api/public/livro-checkout'
     | '/api/public/livro-download'
     | '/api/public/mercadopago-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/livro/obrigado'
+    | '/api/public/livro-checkout'
     | '/api/public/livro-download'
     | '/api/public/mercadopago-webhook'
   id:
     | '__root__'
     | '/'
     | '/livro/obrigado'
+    | '/api/public/livro-checkout'
     | '/api/public/livro-download'
     | '/api/public/mercadopago-webhook'
   fileRoutesById: FileRoutesById
@@ -79,6 +91,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LivroObrigadoRoute: typeof LivroObrigadoRoute
+  ApiPublicLivroCheckoutRoute: typeof ApiPublicLivroCheckoutRoute
   ApiPublicLivroDownloadRoute: typeof ApiPublicLivroDownloadRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
 }
@@ -97,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/livro/obrigado'
       fullPath: '/livro/obrigado'
       preLoaderRoute: typeof LivroObrigadoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/livro-checkout': {
+      id: '/api/public/livro-checkout'
+      path: '/api/public/livro-checkout'
+      fullPath: '/api/public/livro-checkout'
+      preLoaderRoute: typeof ApiPublicLivroCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/livro-download': {
@@ -119,6 +139,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LivroObrigadoRoute: LivroObrigadoRoute,
+  ApiPublicLivroCheckoutRoute: ApiPublicLivroCheckoutRoute,
   ApiPublicLivroDownloadRoute: ApiPublicLivroDownloadRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
 }
