@@ -15,14 +15,17 @@ function errorResponse(message: string, status = 400) {
   );
 }
 
-export const Route = createFileRoute("/api/public/livro-checkout")({
-  server: {
-    handlers: {
-      POST: async ({ request }) => {
+async function handleCheckout(request: Request) {
+  {
+    {
         const accessToken = process.env["MERCADOPAGO_ACCESS_TOKEN"];
         if (!accessToken) return errorResponse("O pagamento está temporariamente indisponível.", 503);
 
-        const parsed = CheckoutSchema.safeParse(Object.fromEntries(await request.formData()));
+        const source =
+          request.method === "GET"
+            ? Object.fromEntries(new URL(request.url).searchParams)
+            : Object.fromEntries(await request.formData());
+        const parsed = CheckoutSchema.safeParse(source);
         if (!parsed.success) return errorResponse("Confira seu nome e e-mail e tente novamente.");
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -92,7 +95,15 @@ export const Route = createFileRoute("/api/public/livro-checkout")({
           status: 303,
           headers: { Location: preference.init_point, "Cache-Control": "no-store" },
         });
-      },
+  }
+  }
+}
+
+export const Route = createFileRoute("/api/public/livro-checkout")({
+  server: {
+    handlers: {
+      GET: ({ request }) => handleCheckout(request),
+      POST: ({ request }) => handleCheckout(request),
     },
   },
 });
