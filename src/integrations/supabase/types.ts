@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      book_orders: {
+        Row: {
+          amount: number
+          buyer_email: string | null
+          buyer_name: string | null
+          created_at: string
+          download_count: number
+          download_token: string
+          id: string
+          paid_at: string | null
+          payment_id: string | null
+          preference_id: string | null
+          status: string
+        }
+        Insert: {
+          amount?: number
+          buyer_email?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          download_count?: number
+          download_token?: string
+          id?: string
+          paid_at?: string | null
+          payment_id?: string | null
+          preference_id?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          buyer_email?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          download_count?: number
+          download_token?: string
+          id?: string
+          paid_at?: string | null
+          payment_id?: string | null
+          preference_id?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       caderno_messages: {
         Row: {
           created_at: string

@@ -10,33 +10,77 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LivroObrigadoRouteImport } from './routes/livro.obrigado'
+import { Route as ApiPublicLivroDownloadRouteImport } from './routes/api/public/livro-download'
+import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LivroObrigadoRoute = LivroObrigadoRouteImport.update({
+  id: '/livro/obrigado',
+  path: '/livro/obrigado',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicLivroDownloadRoute = ApiPublicLivroDownloadRouteImport.update({
+  id: '/api/public/livro-download',
+  path: '/api/public/livro-download',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicMercadopagoWebhookRoute =
+  ApiPublicMercadopagoWebhookRouteImport.update({
+    id: '/api/public/mercadopago-webhook',
+    path: '/api/public/mercadopago-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/livro/obrigado': typeof LivroObrigadoRoute
+  '/api/public/livro-download': typeof ApiPublicLivroDownloadRoute
+  '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/livro/obrigado': typeof LivroObrigadoRoute
+  '/api/public/livro-download': typeof ApiPublicLivroDownloadRoute
+  '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/livro/obrigado': typeof LivroObrigadoRoute
+  '/api/public/livro-download': typeof ApiPublicLivroDownloadRoute
+  '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/livro/obrigado'
+    | '/api/public/livro-download'
+    | '/api/public/mercadopago-webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/livro/obrigado'
+    | '/api/public/livro-download'
+    | '/api/public/mercadopago-webhook'
+  id:
+    | '__root__'
+    | '/'
+    | '/livro/obrigado'
+    | '/api/public/livro-download'
+    | '/api/public/mercadopago-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LivroObrigadoRoute: typeof LivroObrigadoRoute
+  ApiPublicLivroDownloadRoute: typeof ApiPublicLivroDownloadRoute
+  ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +92,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/livro/obrigado': {
+      id: '/livro/obrigado'
+      path: '/livro/obrigado'
+      fullPath: '/livro/obrigado'
+      preLoaderRoute: typeof LivroObrigadoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/livro-download': {
+      id: '/api/public/livro-download'
+      path: '/api/public/livro-download'
+      fullPath: '/api/public/livro-download'
+      preLoaderRoute: typeof ApiPublicLivroDownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/mercadopago-webhook': {
+      id: '/api/public/mercadopago-webhook'
+      path: '/api/public/mercadopago-webhook'
+      fullPath: '/api/public/mercadopago-webhook'
+      preLoaderRoute: typeof ApiPublicMercadopagoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LivroObrigadoRoute: LivroObrigadoRoute,
+  ApiPublicLivroDownloadRoute: ApiPublicLivroDownloadRoute,
+  ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
