@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 async function sendBookEmail(to: string, nome: string, downloadUrl: string) {
   const lovableKey = process.env["LOVABLE_API_KEY"];
@@ -66,6 +65,8 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
         }
 
         if (!paymentId) return new Response("ok");
+
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
         const payRes = await fetch(
           `https://api.mercadopago.com/v1/payments/${paymentId}`,
