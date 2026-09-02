@@ -5,9 +5,18 @@ import heroStill from "@/assets/hero-still.jpg";
 import barbaraPortrait from "@/assets/barbara-portrait.PNG";
 import caravanaCapa from "@/assets/caravana-capa.jpg";
 import { submitCadernoMessage } from "@/lib/caderno.functions";
-import { createBookCheckout } from "@/lib/livro.functions";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Bárbara Luiza · Psicanalista" },
+      { name: "description", content: "Psicanálise de orientação lacaniana, atendimento online e o livro de poemas CARAVANA, por Bárbara Luiza." },
+      { property: "og:title", content: "Bárbara Luiza · Psicanalista" },
+      { property: "og:description", content: "Psicanálise de orientação lacaniana, atendimento online e o livro de poemas CARAVANA." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Index,
 });
 
@@ -376,29 +385,7 @@ function ParaQuem() {
 
 function Livro() {
   const [open, setOpen] = useState(false);
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
-  const [erro, setErro] = useState("");
-  const checkout = useServerFn(createBookCheckout);
-
-  const comprar = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nome.trim() || !email.trim()) return;
-    setStatus("sending");
-    setErro("");
-    try {
-      const res = await checkout({
-        data: { nome: nome.trim(), email: email.trim(), origin: window.location.origin },
-      });
-      window.location.href = res.checkoutUrl;
-    } catch (err) {
-      setStatus("error");
-      setErro(
-        err instanceof Error ? err.message : "Não foi possível abrir o pagamento.",
-      );
-    }
-  };
+  const [sending, setSending] = useState(false);
 
   return (
     <section id="livro" className="py-24 md:py-36 bg-paper border-y border-border grain">
@@ -458,21 +445,29 @@ function Livro() {
           </div>
 
           {open && (
-            <form onSubmit={comprar} className="mt-8 space-y-4">
+            <form
+              action="/api/public/livro-checkout"
+              method="post"
+              onSubmit={() => setSending(true)}
+              className="mt-8 space-y-4"
+            >
               <div className="grid sm:grid-cols-2 gap-4">
                 <input
+                  name="nome"
                   type="text"
                   required
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
+                  minLength={2}
+                  maxLength={80}
+                  autoComplete="name"
                   placeholder="Seu nome"
                   className="w-full bg-transparent border-b border-border focus:border-ink outline-none py-3 font-body text-base placeholder:text-muted-foreground/70"
                 />
                 <input
+                  name="email"
                   type="email"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  maxLength={160}
+                  autoComplete="email"
                   placeholder="Seu e-mail"
                   className="w-full bg-transparent border-b border-border focus:border-ink outline-none py-3 font-body text-base placeholder:text-muted-foreground/70"
                 />
@@ -482,15 +477,12 @@ function Livro() {
               </p>
               <button
                 type="submit"
-                disabled={status === "sending"}
+                disabled={sending}
                 className="group inline-flex items-center gap-3 bg-ink text-cream px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors disabled:opacity-60"
               >
-                {status === "sending" ? "Abrindo pagamento…" : "Ir para o pagamento"}
+                {sending ? "Abrindo pagamento…" : "Ir para o pagamento"}
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </button>
-              {erro && (
-                <p className="font-body text-sm text-terracotta">{erro}</p>
-              )}
               <p className="font-body text-sm text-muted-foreground">
                 Prefere falar direto com a Bárbara?{" "}
                 <a href={WHATSAPP_LIVRO_URL} target="_blank" rel="noreferrer" className="underline hover:text-ink">
