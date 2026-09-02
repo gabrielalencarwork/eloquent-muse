@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const CheckoutSchema = z.object({
   nome: z.string().trim().min(2).max(80),
@@ -26,6 +25,7 @@ export const Route = createFileRoute("/api/public/livro-checkout")({
         const parsed = CheckoutSchema.safeParse(Object.fromEntries(await request.formData()));
         if (!parsed.success) return errorResponse("Confira seu nome e e-mail e tente novamente.");
 
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const origin = new URL(request.url).origin;
         const { data: order, error } = await supabaseAdmin
           .from("book_orders")

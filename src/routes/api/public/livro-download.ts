@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const Route = createFileRoute("/api/public/livro-download")({
   server: {
@@ -11,6 +10,7 @@ export const Route = createFileRoute("/api/public/livro-download")({
           return new Response("Link inválido.", { status: 400 });
         }
 
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: order } = await supabaseAdmin
           .from("book_orders")
           .select("id, status, download_count")
