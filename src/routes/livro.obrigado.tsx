@@ -37,6 +37,8 @@ function Obrigado() {
   );
   const [nome, setNome] = useState<string | null>(null);
 
+  const [tick, setTick] = useState(0);
+
   useEffect(() => {
     if (!token) {
       setState("missing");
@@ -44,6 +46,7 @@ function Obrigado() {
     }
     let stop = false;
     let tries = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
     const poll = async () => {
       try {
@@ -53,17 +56,21 @@ function Obrigado() {
         if (!res.found) return setState("missing");
         if (res.paid) return setState("paid");
         setState("pending");
-        if (tries++ < 20) setTimeout(poll, 4000);
+        if (tries++ < 90) timer = setTimeout(poll, 4000);
       } catch {
-        if (!stop) setState("pending");
+        if (stop) return;
+        setState("pending");
+        if (tries++ < 90) timer = setTimeout(poll, 6000);
       }
     };
 
     void poll();
     return () => {
       stop = true;
+      if (timer) clearTimeout(timer);
     };
-  }, [token, check]);
+  }, [token, check, tick]);
+
 
   return (
     <main className="min-h-screen bg-cream text-ink grain flex items-center justify-center px-6 py-24">
