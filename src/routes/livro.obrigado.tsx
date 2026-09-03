@@ -96,11 +96,22 @@ function Obrigado() {
             </p>
             <a
               href={`/api/public/livro-download?token=${encodeURIComponent(token)}`}
+              target="_blank"
+              rel="noopener"
               className="mt-10 inline-flex items-center gap-3 bg-ink text-cream px-8 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors"
             >
               Baixar o livro
               <span>↓</span>
             </a>
+            <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              o download não começou?{" "}
+              <a
+                href={`/api/public/livro-download?token=${encodeURIComponent(token)}`}
+                className="underline hover:text-ink"
+              >
+                tentar novamente
+              </a>
+            </p>
           </>
         )}
 
@@ -114,8 +125,19 @@ function Obrigado() {
               sozinha, e o link do livro também chega no seu e-mail assim que o
               pagamento for aprovado.
             </p>
+            <button
+              type="button"
+              onClick={() => {
+                setState("loading");
+                setTick((t) => t + 1);
+              }}
+              className="mt-10 inline-flex items-center gap-3 border border-ink px-8 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-ink hover:text-cream transition-colors"
+            >
+              Verificar agora
+            </button>
           </>
         )}
+
 
         {state === "missing" && (
           <>
