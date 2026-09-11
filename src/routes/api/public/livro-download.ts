@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { publicSiteOrigin, reconcileBookOrder } from "@/lib/livro.server";
 
 const FILE_NAME = "CARAVANA - Barbara Luiza.pdf";
 
@@ -21,6 +20,7 @@ export const Route = createFileRoute("/api/public/livro-download")({
         }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { publicSiteOrigin, reconcileBookOrder } = await import("@/lib/livro.server");
         const order = await reconcileBookOrder(
           supabaseAdmin,
           token,

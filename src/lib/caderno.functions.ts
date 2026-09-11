@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const InputSchema = z.object({
   nome: z.string().trim().min(1).max(80),
@@ -12,6 +11,7 @@ const DESTINATION_EMAIL = "barbaraluizasilveira@gmail.com";
 export const submitCadernoMessage = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     // 1. Persist message (source of truth, never lost)
     const { error: dbError } = await supabaseAdmin
       .from("caderno_messages")

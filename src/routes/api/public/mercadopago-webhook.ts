@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { publicSiteOrigin, reconcileBookPaymentById } from "@/lib/livro.server";
 
 export const Route = createFileRoute("/api/public/mercadopago-webhook")({
   server: {
@@ -27,6 +26,7 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
         if (!paymentId) return new Response("ignored", { status: 202 });
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { publicSiteOrigin, reconcileBookPaymentById } = await import("@/lib/livro.server");
         const origin = publicSiteOrigin(request.url);
 
         try {

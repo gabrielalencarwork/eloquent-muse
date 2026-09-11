@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { BOOK_PRICE, publicSiteOrigin } from "@/lib/livro.server";
+
+const BOOK_PRICE = 33;
 
 const CheckoutSchema = z.object({
   nome: z.string().trim().min(2).max(80),
@@ -23,7 +24,10 @@ async function handleCheckout(request: Request) {
         if (!parsed.success) return errorResponse("Confira seu nome e e-mail e tente novamente.");
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const origin = publicSiteOrigin(request.url);
+        const requestedOrigin = new URL(request.url);
+        const origin = requestedOrigin.hostname === "localhost" || requestedOrigin.hostname === "127.0.0.1"
+          ? requestedOrigin.origin
+          : "https://www.barbaraluizapsi.com.br";
         const { data: order, error } = await supabaseAdmin
           .from("book_orders")
           .insert({
