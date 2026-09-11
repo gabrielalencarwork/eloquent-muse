@@ -22,7 +22,10 @@ export type Database = {
           created_at: string
           download_count: number
           download_token: string
+          email_attempt_count: number
+          email_sent_at: string | null
           id: string
+          last_payment_check_at: string | null
           paid_at: string | null
           payment_id: string | null
           preference_id: string | null
@@ -35,7 +38,10 @@ export type Database = {
           created_at?: string
           download_count?: number
           download_token?: string
+          email_attempt_count?: number
+          email_sent_at?: string | null
           id?: string
+          last_payment_check_at?: string | null
           paid_at?: string | null
           payment_id?: string | null
           preference_id?: string | null
@@ -48,7 +54,10 @@ export type Database = {
           created_at?: string
           download_count?: number
           download_token?: string
+          email_attempt_count?: number
+          email_sent_at?: string | null
           id?: string
+          last_payment_check_at?: string | null
           paid_at?: string | null
           payment_id?: string | null
           preference_id?: string | null
@@ -82,7 +91,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_book_download_count: {
+        Args: { _order_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
