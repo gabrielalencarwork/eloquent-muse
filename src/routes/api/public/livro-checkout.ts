@@ -69,7 +69,7 @@ async function handleCheckout(request: Request) {
               pending: `${origin}/livro/obrigado?token=${order.download_token}`,
               failure: `${origin}/#livro`,
             },
-            auto_return: "approved",
+            ...(origin.startsWith("https://") ? { auto_return: "approved" } : {}),
           }),
         });
 
