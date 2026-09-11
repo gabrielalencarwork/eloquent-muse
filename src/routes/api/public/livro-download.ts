@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { publicSiteOrigin, reconcileBookOrder } from "@/lib/livro.server";
 
 const FILE_NAME = "CARAVANA - Barbara Luiza.pdf";
 
@@ -20,11 +21,11 @@ export const Route = createFileRoute("/api/public/livro-download")({
         }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: order } = await supabaseAdmin
-          .from("book_orders")
-          .select("id, status, download_count")
-          .eq("download_token", token)
-          .maybeSingle();
+        const order = await reconcileBookOrder(
+          supabaseAdmin,
+          token,
+          publicSiteOrigin(request.url),
+        );
 
         if (!order) {
           return htmlMessage("Link não encontrado", "Verifique o link recebido por e-mail ou refaça o pedido.", 404);
@@ -52,18 +53,17 @@ export const Route = createFileRoute("/api/public/livro-download")({
           );
         }
 
-        const bytes = await file.arrayBuffer();
+        const { error: countError } = await supabaseAdmin.rpc(
+          "increment_book_download_count",
+          { _order_id: order.id },
+        );
+        if (countError) console.error("book download count failed", countError);
 
-        await supabaseAdmin
-          .from("book_orders")
-          .update({ download_count: (order.download_count ?? 0) + 1 })
-          .eq("id", order.id);
-
-        return new Response(bytes, {
+        return new Response(file.stream(), {
           status: 200,
           headers: {
             "Content-Type": "application/pdf",
-            "Content-Length": String(bytes.byteLength),
+            "Content-Length": String(file.size),
             "Content-Disposition": `attachment; filename="caravana.pdf"; filename*=UTF-8''${encodeURIComponent(FILE_NAME)}`,
             "Cache-Control": "no-store",
           },
