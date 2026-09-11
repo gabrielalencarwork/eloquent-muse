@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
+const BOOK_PRICE = 33;
+
 const CheckoutSchema = z.object({
   nome: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(160),
 });
-
-const BOOK_PRICE = 33;
 
 function errorResponse(message: string, status = 400) {
   return new Response(
@@ -16,20 +16,18 @@ function errorResponse(message: string, status = 400) {
 }
 
 async function handleCheckout(request: Request) {
-  {
-    {
-        const accessToken = process.env["MERCADOPAGO_ACCESS_TOKEN"];
-        if (!accessToken) return errorResponse("O pagamento está temporariamente indisponível.", 503);
+  const accessToken = process.env["MERCADOPAGO_ACCESS_TOKEN"];
+  if (!accessToken) return errorResponse("O pagamento está temporariamente indisponível.", 503);
 
-        const source =
-          request.method === "GET"
-            ? Object.fromEntries(new URL(request.url).searchParams)
-            : Object.fromEntries(await request.formData());
+        const source = Object.fromEntries(await request.formData());
         const parsed = CheckoutSchema.safeParse(source);
         if (!parsed.success) return errorResponse("Confira seu nome e e-mail e tente novamente.");
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const origin = new URL(request.url).origin;
+        const requestedOrigin = new URL(request.url);
+        const origin = requestedOrigin.hostname === "localhost" || requestedOrigin.hostname === "127.0.0.1"
+          ? requestedOrigin.origin
+          : "https://www.barbaraluizapsi.com.br";
         const { data: order, error } = await supabaseAdmin
           .from("book_orders")
           .insert({
@@ -71,6 +69,7 @@ async function handleCheckout(request: Request) {
               pending: `${origin}/livro/obrigado?token=${order.download_token}`,
               failure: `${origin}/#livro`,
             },
+            ...(origin.startsWith("https://") ? { auto_return: "approved" } : {}),
           }),
         });
 
@@ -95,14 +94,11 @@ async function handleCheckout(request: Request) {
           status: 303,
           headers: { Location: preference.init_point, "Cache-Control": "no-store" },
         });
-  }
-  }
 }
 
 export const Route = createFileRoute("/api/public/livro-checkout")({
   server: {
     handlers: {
-      GET: ({ request }) => handleCheckout(request),
       POST: ({ request }) => handleCheckout(request),
     },
   },

@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { getOrderStatus } from "@/lib/livro.functions";
 
-const SearchSchema = z.object({ token: z.string().catch("") });
+const SearchSchema = z.object({
+  token: z.string().catch(""),
+  payment_id: z.string().optional().catch(undefined),
+});
 
 export const Route = createFileRoute("/livro/obrigado")({
   validateSearch: (search) => SearchSchema.parse(search),
@@ -30,7 +33,7 @@ export const Route = createFileRoute("/livro/obrigado")({
 });
 
 function Obrigado() {
-  const { token } = Route.useSearch();
+  const { token, payment_id: paymentId } = Route.useSearch();
   const check = useServerFn(getOrderStatus);
   const [state, setState] = useState<"loading" | "paid" | "pending" | "missing">(
     "loading",
@@ -50,7 +53,9 @@ function Obrigado() {
 
     const poll = async () => {
       try {
-        const res = await check({ data: { token } });
+        const res = await check({
+          data: { token, paymentId, origin: window.location.origin },
+        });
         if (stop) return;
         setNome(res.nome);
         if (!res.found) return setState("missing");
@@ -69,7 +74,7 @@ function Obrigado() {
       stop = true;
       if (timer) clearTimeout(timer);
     };
-  }, [token, check, tick]);
+  }, [token, paymentId, check, tick]);
 
 
   return (
@@ -91,13 +96,12 @@ function Obrigado() {
               O livro é seu{nome ? <>, <span className="display-italic">{nome}</span></> : null}.
             </h1>
             <p className="mt-6 font-body text-lg leading-relaxed text-ink/80">
-              O PDF de <em>CARAVANA</em> está liberado. Também enviamos o link
-              para o seu e-mail.
+               O PDF de <em>CARAVANA</em> está liberado. O link também será
+               enviado para o seu e-mail.
             </p>
             <a
               href={`/api/public/livro-download?token=${encodeURIComponent(token)}`}
-              target="_blank"
-              rel="noopener"
+               download
               className="mt-10 inline-flex items-center gap-3 bg-ink text-cream px-8 py-4 font-mono text-[11px] uppercase tracking-[0.22em] hover:bg-terracotta transition-colors"
             >
               Baixar o livro

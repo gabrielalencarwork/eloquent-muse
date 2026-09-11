@@ -447,7 +447,7 @@ function Livro() {
           {open && (
             <form
               action="/api/public/livro-checkout"
-              method="get"
+              method="post"
               onSubmit={() => setSending(true)}
               className="mt-8 space-y-4"
             >
